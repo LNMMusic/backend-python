@@ -1,19 +1,17 @@
 # LIBS
 import config;  import client
+import routes
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 
 # MAIN APP
-# ENV
-config.env_load('.env')
-
 # APP
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins = config.origins.keys(),
+    allow_origins = {'frontend': 'http://localhost:3000'},
     allow_credentials = True,
     allow_methods = ["*"],
     allow_headers = ["*"]

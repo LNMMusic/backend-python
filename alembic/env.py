@@ -1,29 +1,24 @@
+# LIBS
 from logging.config import fileConfig
+# DB
+from sqlalchemy     import engine_from_config
+from sqlalchemy     import pool
+from alembic        import context
+# ENV
+from config         import env_get
+# env_load(".env")
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
 
-from alembic import context
-
-# this is the Alembic Config object, which provides
-# access to the values within the .ini file in use.
+# CONFIG [SQL String Connection]
 config = context.config
+config.set_main_option("sqlalchemy.url", env_get("DBSQL_URI"))
+fileConfig(config.config_file_name)
 
-# Interpret the config file for Python logging.
-# This line sets up loggers basically.
-if config.config_file_name is not None:
-    fileConfig(config.config_file_name)
-
-# add your model's MetaData object here
-# for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
-target_metadata = None
-
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
+# MODELS
+import client
+import models
+''' <Base> contains all Models processed (after import on models) '''
+target_metadata = client.Base.metadata
 
 
 def run_migrations_offline():

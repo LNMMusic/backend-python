@@ -1,9 +1,9 @@
 # Libraries
-from sqlalchemy import create_engine
+from sqlalchemy                 import create_engine
+from sqlalchemy.orm             import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
 # Env
-from config.env import Env
+from config                     import env_get
 
 
 # CONNECTION
@@ -22,7 +22,17 @@ from config.env import Env
                 - Engine    =>      Table Creation
                 - Session   =>      Table DataContent [CRUD]
 '''
-engine = create_engine(Env("DB_DSN"))
+engine = create_engine(env_get("DBSQL_URI"))
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
+
+
+# Instance
+def get_db():
+    ''' create session on sql [transactions] '''
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
