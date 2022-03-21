@@ -1,5 +1,7 @@
 fastapi==0.75.0
 python-dotenv==0.19.2
+alembic==1.7.7
 SQLAlchemy==1.4.32
-mysqlclient==2.1.0
+# mysqlclient==2.1.0                // doesn't work well on docker
+mysql-connector-python==8.0.28
 uvicorn==0.17.6
