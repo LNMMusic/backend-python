@@ -9,7 +9,7 @@ from models         import Car, CarResponse, CarRequest, Response
 
 # SERVICE
 CarService = APIRouter(
-    prefix  = "/car",
+    prefix  = "/api/car",
     tags    = ["car"]
 )
 
