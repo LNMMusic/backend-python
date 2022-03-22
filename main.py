@@ -12,10 +12,11 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins = [
-        'http://localhost:3000',
-        'http://192.168.0.4:3000',
-        # NGINX [React]
-        'http://localhost:80'
+        "*"
+        # 'http://localhost:3000',
+        # # NGINX [React]
+        # 'http://localhost:80',
+        # 'http://frontend:80',
     ],
     allow_credentials = True,
     allow_methods = ["*"],
