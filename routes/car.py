@@ -3,7 +3,7 @@ from fastapi        import APIRouter
 from fastapi        import Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from client         import get_db
+from client         import get_db, R
 from models         import Car, CarResponse, CarRequest, Response
 
 
@@ -29,18 +29,25 @@ async def get_car(id:int, db:Session=Depends(get_db)):
 
 @CarService.get("/", response_model=Response)
 async def get_car_name(car_plate: str = "", db:Session=Depends(get_db)):
-    # Process
-    car = db.query(Car).filter(Car.car_plate == car_plate.upper()).first()
-    if car is None:
-        raise HTTPException(status_code=400, detail=Response(
-            message="Failed To Find Car!",
-            data=None
-        ).dict())
-    
+    # Process [Redis implementation]
+    carPlate= car_plate.upper()
+    carName = R.get(carPlate)
+
+    if not carName:
+        car = db.query(Car).filter(Car.car_plate == carPlate).first()
+        if car is None:
+            raise HTTPException(status_code=400, detail=Response(
+                message="Failed To Find Car!",
+                data=None
+            ).dict())
+        
+        carName = car.car_name
+        R.set(carPlate, carName); R.expire(carPlate, 600)
+
     # Response
     return Response(
         message="Succeed To Find Car!",
-        data=car.car_name
+        data=carName
     )
 
 
